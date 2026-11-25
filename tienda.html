@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minimarket puno | Tienda Online</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+  body{background:#f2f2f2}
+  header{background:#ff6b00;color:white;padding:20px;text-align:center}
+  header h1{font-size:28px}
+  header p{opacity:.9}
+  .buscador{background:white;padding:15px;display:flex;gap:10px;justify-content:center;position:sticky;top:0;z-index:10}
+  .buscador input{padding:12px;width:70%;border:2px solid #ff6b00;border-radius:20px;outline:none}
+  .buscador button{background:#ff6b00;color:white;border:none;padding:12px 20px;border-radius:20px;cursor:pointer}
+  .categorias{display:flex;gap:10px;justify-content:center;padding:15px;flex-wrap:wrap}
+  .categorias button{padding:8px 18px;border:none;background:white;border-radius:20px;cursor:pointer;box-shadow:0 2px 5px #ccc}
+  .categorias button.activo{background:#ff6b00;color:white}
+  .productos{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:15px;padding:15px;max-width:900px;margin:auto}
+  .card{background:white;border-radius:15px;overflow:hidden;box-shadow:0 3px 10px #ddd;text-align:center;padding-bottom:12px}
+  .card img{width:100%;height:130px;object-fit:cover}
+  .card h3{margin:10px 0 5px}
+  .card p{color:#666;font-size:13px}
+  .precio{color:#ff6b00;font-weight:bold;font-size:18px;margin:8px 0}
+  .card button{background:#25D366;color:white;border:none;padding:10px;width:85%;border-radius:20px;cursor:pointer;font-weight:bold}
+  .carrito{position:fixed;bottom:15px;right:15px;background:#111;color:white;padding:15px 20px;border-radius:30px;cursor:pointer;box-shadow:0 5px 15px rgba(0,0,0,.3)}
+  .oferta{background:#ffe600;text-align:center;padding:8px;font-weight:bold}
+</style>
+</head>
+<body>
+
+<div class="oferta">🔥 OFERTA HOY: 2x1 en Bebidas - Solo en puno</div>
+
+<header>
+  <h1>🛒 MINIMARKET PUNO</h1>
+  <p>Delivery en 30 min | Abierto 7am - 11pm</p>
+</header>
+
+<div class="buscador">
+  <input id="buscar" type="text" placeholder="Buscar: leche, pan, gaseosa...">
+  <button onclick="buscar()">Buscar</button>
+</div>
+
+<div class="categorias">
+  <button class="activo" onclick="filtrar('todo',this)">Todos</button>
+  <button onclick="filtrar('bebida',this)">Bebidas</button>
+  <button onclick="filtrar('comida',this)">Comida</button>
+  <button onclick="filtrar('limpieza',this)">Limpieza</button>
+</div>
+
+<div class="productos" id="lista"></div>
+
+<div class="carrito" onclick="verCarrito()">🛒 Carrito: <span id="contador">0</span> | S/ <span id="total">0.00</span></div>
+
+<script>
+let productos = [
+  {nombre:"Leche Gloria 1L", cat:"bebida", precio:4.50, img:"https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500"},
+  {nombre:"Gaseosa Inca Kola 1.5L", cat:"bebida", precio:6.50, img:"https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=500"},
+  {nombre:"Pan de Molde", cat:"comida", precio:5.00, img:"https://images.unsplash.com/photo-1509440159596-0249088772ff?w=500"},
+  {nombre:"Arroz Costeño 5kg", cat:"comida", precio:22.90, img:"https://images.unsplash.com/photo-1586201375761-83865001e31c?w=500"},
+  {nombre:"Detergente Ariel", cat:"limpieza", precio:18.50, img:"https://images.unsplash.com/photo-1610557892470-55d9e80c0bce?w=500"},
+  {nombre:"Papel Higiénico x12", cat:"limpieza", precio:15.90, img:"https://images.unsplash.com/photo-1584553421349-3557471bed79?w=500"},
+];
+let carrito = 0, total = 0, filtroActual = 'todo';
+
+function mostrar(lista){
+  let html = "";
+  lista.forEach(p=>{
+    html += `<div class="card">
+      <img src="${p.img}">
+      <h3>${p.nombre}</h3>
+      <p>Categoría: ${p.cat}</p>
+      <div class="precio">S/ ${p.precio.toFixed(2)}</div>
+      <button onclick="agregar(${p.precio})">+ Agregar</button>
+    </div>`;
+  });
+  document.getElementById("lista").innerHTML = html;
+}
+function agregar(precio){
+  carrito++; total += precio;
+  document.getElementById("contador").innerText = carrito;
+  document.getElementById("total").innerText = total.toFixed(2);
+  alert("Agregado al carrito ✅");
+}
+function filtrar(cat, btn){
+  document.querySelectorAll(".categorias button").forEach(b=>b.classList.remove("activo"));
+  btn.classList.add("activo");
+  filtroActual = cat;
+  if(cat=='todo') mostrar(productos);
+  else mostrar(productos.filter(p=>p.cat==cat));
+}
+function buscar(){
+  let texto = document.getElementById("buscar").value.toLowerCase();
+  mostrar(productos.filter(p=>p.nombre.toLowerCase().includes(texto)));
+}
+function verCarrito(){
+  if(carrito==0) alert("Tu carrito está vacío");
+  else alert(`Tienes ${carrito} productos - Total: S/ ${total.toFixed(2)}\n¡Gracias por comprar en Minimarket Lima!`);
+}
+mostrar(productos);
+</script>
+</body>
+</html>
